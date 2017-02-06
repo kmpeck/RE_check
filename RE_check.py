@@ -47,13 +47,31 @@ def MutagenizeCodon(seq, codon, cutsite):
 	nc = len(cutsite) #length of restriction enzyme cutsite
     n = len(seq)
     assert len(seq) % 3 == 0, "length of sequence not a multiple of 3"
+	seq = ''.join([nt for nt in seq if nt.istitle()])
 	
-    for i in range(ncodons):
-        i = icodon * 3
-        primer = "%sNNN%s" % (seq[i - flanklength : i], seq[i + 3 : i + 3 + flanklength])
-        name = "%s-for-mut%d" % (prefix, firstcodon + icodon)
-        primers.append((name, primer))
-    return primers
+	permutations = []
+	library = ['N','N','N']
+	for i in 'ATGC':
+    library[0] = i
+    for j in 'ATGC':
+        library[1] = j
+        for k in 'ATGC':           
+            library[2] = k
+            permutations.append(''.join([nt for nt in library if nt.istitle()]))
+	
+	icodon = codon * 3
+	perm_seq_all = []
+	
+	for i in range(0,len(permutations)):
+		perm_seq = seq[icodon-nc : icodon] + permutations[i] + seq[icodon+3:icodon+3+nc]
+		perm_seq_all.append(perm_seq)
+	
+	RE_data = []
+	for i in range(0,len(perm_seq_all)):
+		if cutsite in perm_seq_all[i]:
+			RE_data.append(codon, perm_seq_all[i])
+		
+   return RE_data
 
 
 
