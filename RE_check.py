@@ -30,8 +30,25 @@ def Parser():
 	parser.add_argument('cutsite', type=str, help='specific restriction enzyme cutsite you would like to analyze')
     
 	return parser
+	
+def NPermutations():
+	"""Creates a three nucleotide set of all permutations of nucleotides (NNN)
+	
+	Returns a list of all permutations for NNN
+	"""
+	permutations = []
+	library = ['N','N','N']
+	for i in 'ATGC':
+		library[0] = i
+		for j in 'ATGC':
+			library[1] = j
+			for k in 'ATGC':           
+				library[2] = k
+				permutations.append(''.join([nt for nt in library if nt.istitle()]))
+				
+	return permutations
 
-def MutagenizeCodon(seq, codon, cutsite):
+def MutagenizeCodon(seq, codon, cutsite, permutations):
 
 	"""Creates oligos to tile a gene and introduce NNN at each codon.
 
@@ -50,16 +67,6 @@ def MutagenizeCodon(seq, codon, cutsite):
 	seq = ''.join([nt for nt in seq if nt.istitle()])
 	
 	#print codon
-	
-	permutations = []
-	library = ['N','N','N']
-	for i in 'ATGC':
-		library[0] = i
-		for j in 'ATGC':
-			library[1] = j
-			for k in 'ATGC':           
-				library[2] = k
-				permutations.append(''.join([nt for nt in library if nt.istitle()]))
 	
 	icodon = codon * 3
 	perm_seq_all = []
@@ -109,11 +116,14 @@ def main():
 	firstcodon =  args['firstcodon']
 	print "\nThe sequence will be scanned starting at codon %d and searching for the cutsite %s." % (firstcodon, cutsite)
 
+	#Generate permutations needed for scanning
+	permutations = NPermutations()
+	
     #Scan each codon for the presence of the cutsite
 	scanlength = len(sequence)/3 - firstcodon + 1
 	introduced_REsites = []
 	for i in range(0,scanlength):
-		RE_data = MutagenizeCodon(sequence, firstcodon+i, cutsite)
+		RE_data = MutagenizeCodon(sequence, firstcodon+i, cutsite, permutations)
 		if RE_data is not None:
 			introduced_REsites.append(RE_data)
 		#print RE_data
@@ -124,11 +134,11 @@ def main():
 		print "\nNow writing these introduced cutsites to %s" % outfile
 		f = open(outfile, 'w+')
 		f.write("Cutsite: %s\r\n" % cutsite)
+		f.write("Introduced sites: %d\r\n" % len(introduced_REsites))
 		f.write("Input sequence file: %s\r\n" % sequencefile)
 		f.write("\r\nCodon\tSequence\r\n")
 		for i in range(0,len(introduced_REsites)-1):
-			print introduced_REsites[i][0]
-			#print introduced_REsites[i][1]
+			#print introduced_REsites[i][0]
 			f.write("%d\t%s\r\n" % (introduced_REsites[i][0]))
 		f.close()
 	else:
