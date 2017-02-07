@@ -11,11 +11,7 @@ For command line arguments, run::
 import os
 import sys
 import math
-import re
 import argparse
-#from Bio.SeqUtils import MeltingTemp as mt
-#from Bio.Seq import Seq
-
 
 def Parser():
 	"""Returns command line parser."""
@@ -82,7 +78,6 @@ def MutagenizeCodon(seq, codon, cutsite, permutations):
 		return RE_data
 
 
-
 def main():
 	parser = Parser()
 	args = vars(parser.parse_args())
@@ -91,12 +86,7 @@ def main():
 	for (argname, argvalue) in args.items():
 		print("\t%s = %s" % (argname, argvalue))
 
-
-    #primerlength = args['startprimerlength']
-
-    #if (primerlength <=3 ) or (primerlength % 2 == 0):
-    #    raise ValueError("Does not appear to be valid primer length: %d" % primerlength)
-    
+	#Read in sequence file
 	sequencefile = args['sequencefile']
 	if not os.path.isfile(sequencefile):
 		raise IOError("Cannot find sequencefile %s" % sequencefile)
