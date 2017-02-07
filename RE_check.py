@@ -70,7 +70,7 @@ def MutagenizeCodon(seq, codon, cutsite, permutations):
 	perm_seq_all = []
 	
 	for i in range(0,len(permutations)):
-		perm_seq = seq[max(0,icodon-nc):icodon] + permutations[i] + seq[icodon+3:icodon+3+nc]
+		perm_seq = seq[max(0,icodon-nc):icodon] + permutations[i] + seq[min(n,icodon+3):min(n,icodon+3+nc)]
 		perm_seq_all.append(perm_seq)
 	
 	RE_data = []
@@ -130,8 +130,8 @@ def main():
 		f.write("Introduced sites: %d\r\n" % len(introduced_REsites))
 		f.write("Input sequence file: %s\r\n" % sequencefile)
 		f.write("\r\nCodon\tSequence\r\n")
-		for i in range(0,len(introduced_REsites)-1):
-			#print introduced_REsites[i][0]
+		for i in range(0,len(introduced_REsites)):
+			#print(introduced_REsites[i][0])
 			f.write("%d\t%s\r\n" % (introduced_REsites[i][0]))
 		f.close()
 	else:
