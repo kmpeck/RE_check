@@ -49,6 +49,8 @@ def MutagenizeCodon(seq, codon, cutsite):
 	assert len(seq) % 3 == 0, "length of sequence not a multiple of 3"
 	seq = ''.join([nt for nt in seq if nt.istitle()])
 	
+	#print codon
+	
 	permutations = []
 	library = ['N','N','N']
 	for i in 'ATGC':
@@ -111,7 +113,7 @@ def main():
 	scanlength = len(sequence)/3 - firstcodon + 1
 	introduced_REsites = []
 	for i in range(0,scanlength):
-		RE_data = MutagenizeCodon(sequence, firstcodon, cutsite)
+		RE_data = MutagenizeCodon(sequence, firstcodon+i, cutsite)
 		if RE_data is not None:
 			introduced_REsites.append(RE_data)
 		#print RE_data
