@@ -124,9 +124,10 @@ def main():
 		print "\nNow writing these introduced cutsites to %s" % outfile
 		f = open(outfile, 'w+')
 		f.write("Codon\tSequence\r\n")
-		for i in range(0,len(introduced_REsites)):
-			#print introduced_REsites[i]
-			f.write("%d\t%s\r\n" %(introduced_REsites[i][0], introduced_REsites[i][1]))
+		for i in range(0,len(introduced_REsites)-1):
+			print introduced_REsites[i][0]
+			#print introduced_REsites[i][1]
+			f.write("%d\t%s\r\n" % (introduced_REsites[i][0]))
 		f.close()
 	else:
 		print "\nNo cutsites to print, program done.\n"
