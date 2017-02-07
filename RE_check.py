@@ -93,6 +93,7 @@ def main():
 	sequence = open(sequencefile).read() 
 	sequence = sequence.replace(' ', '')
 	sequence = sequence.replace('\n', '')
+	sequence = sequence.upper()
 	print( "Read a sequence of length %d from %s:\n%s" % (len(sequence), sequencefile, sequence))
 	outfile = args['outfile']
 	cutsite = args['cutsite']
