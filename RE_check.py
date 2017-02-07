@@ -75,8 +75,9 @@ def MutagenizeCodon(seq, codon, cutsite):
 	for i in range(0,len(perm_seq_all)):
 		if cutsite in perm_seq_all[i]:
 			RE_data.append((codon, perm_seq_all[i]))
-		
-	return RE_data
+	
+	if len(RE_data) > 0:
+		return RE_data
 
 
 
@@ -104,22 +105,28 @@ def main():
 	outfile = args['outfile']
 	cutsite = args['cutsite']
 	firstcodon =  args['firstcodon']
-	print "The sequence will be scanned starting at codon %d and searching for the cutsite %s." % (firstcodon, cutsite)
+	print "\nThe sequence will be scanned starting at codon %d and searching for the cutsite %s." % (firstcodon, cutsite)
 
     #Scan each codon for the presence of the cutsite
 	scanlength = len(sequence)/3 - firstcodon + 1
 	introduced_REsites = []
 	for i in range(0,scanlength):
 		RE_data = MutagenizeCodon(sequence, firstcodon, cutsite)
-		introduced_REsites.append(RE_data)
+		if RE_data is not None:
+			introduced_REsites.append(RE_data)
+		#print RE_data
 
-	print "There were %d introduced cutsites for the sequence %s" % (len(introduced_REsites), cutsite)
+	print "\nThere were %d introduced cutsites for the sequence %s" % (len(introduced_REsites), cutsite)
     
-	print "\nNow writing these introduced cutsites to %s" % outfile
-	f = open(outfile, 'w')
-	f.write("Codon\tSequence\r\n")
-	for i in range(0,len(introduced_REsites)):
-		f.write("%d \t %s \r\n" % RE_data[i])
-	f.close()
+	if len(introduced_REsites) > 0:
+		print "\nNow writing these introduced cutsites to %s" % outfile
+		f = open(outfile, 'w+')
+		f.write("Codon\tSequence\r\n")
+		for i in range(0,len(introduced_REsites)):
+			#print introduced_REsites[i]
+			f.write("%d\t%s\r\n" %(introduced_REsites[i][0], introduced_REsites[i][1]))
+		f.close()
+	else:
+		print "\nNo cutsites to print, program done.\n"
 
 main() # run the main program
