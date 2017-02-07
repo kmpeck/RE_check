@@ -120,7 +120,7 @@ def main():
 	permutations = NPermutations()
 	
     #Scan each codon for the presence of the cutsite
-	scanlength = len(sequence)/3 - firstcodon + 1
+	scanlength = len(sequence)//3 - firstcodon + 1
 	introduced_REsites = []
 	for i in range(0,scanlength):
 		RE_data = MutagenizeCodon(sequence, firstcodon+i, cutsite, permutations)
