@@ -66,18 +66,11 @@ def MutagenizeCodon(seq, codon, cutsite, permutations):
 	assert len(seq) % 3 == 0, "length of sequence not a multiple of 3"
 	seq = ''.join([nt for nt in seq if nt.istitle()])
 	
-	#print codon
-	
-	icodon = codon * 3
+	icodon = (codon-1) * 3
 	perm_seq_all = []
 	
 	for i in range(0,len(permutations)):
-		if icodon <= nc: #codons at the beginning of the sequence
-			perm_seq = permutations[i] + seq[icodon+3:icodon+3+nc]
-		elif icodon >= n - nc: #codons at the end of the sequence
-			perm_seq = seq[icodon-nc : icodon] + permutations[i]
-		else:
-			perm_seq = seq[icodon-nc : icodon] + permutations[i] + seq[icodon+3:icodon+3+nc]
+		perm_seq = seq[max(0,icodon-nc):icodon] + permutations[i] + seq[icodon+3:icodon+3+nc]
 		perm_seq_all.append(perm_seq)
 	
 	RE_data = []
