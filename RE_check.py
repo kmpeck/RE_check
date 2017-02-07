@@ -14,7 +14,7 @@ import math
 import re
 import argparse
 #from Bio.SeqUtils import MeltingTemp as mt
-from Bio.Seq import Seq
+#from Bio.Seq import Seq
 
 
 def Parser():
@@ -110,11 +110,11 @@ def main():
 	sequence = open(sequencefile).read() 
 	sequence = sequence.replace(' ', '')
 	sequence = sequence.replace('\n', '')
-	print "Read a sequence of length %d from %s:\n%s" % (len(sequence), sequencefile, sequence)
+	print( "Read a sequence of length %d from %s:\n%s" % (len(sequence), sequencefile, sequence))
 	outfile = args['outfile']
 	cutsite = args['cutsite']
 	firstcodon =  args['firstcodon']
-	print "\nThe sequence will be scanned starting at codon %d and searching for the cutsite %s." % (firstcodon, cutsite)
+	print( "\nThe sequence will be scanned starting at codon %d and searching for the cutsite %s." % (firstcodon, cutsite))
 
 	#Generate permutations needed for scanning
 	permutations = NPermutations()
@@ -128,10 +128,10 @@ def main():
 			introduced_REsites.append(RE_data)
 		#print RE_data
 
-	print "\nThere were %d introduced cutsites for the sequence %s" % (len(introduced_REsites), cutsite)
+	print( "\nThere were %d introduced cutsites for the sequence %s" % (len(introduced_REsites), cutsite))
     
 	if len(introduced_REsites) > 0:
-		print "\nNow writing these introduced cutsites to %s" % outfile
+		print( "\nNow writing these introduced cutsites to %s" % outfile)
 		f = open(outfile, 'w+')
 		f.write("Cutsite: %s\r\n" % cutsite)
 		f.write("Introduced sites: %d\r\n" % len(introduced_REsites))
@@ -142,6 +142,6 @@ def main():
 			f.write("%d\t%s\r\n" % (introduced_REsites[i][0]))
 		f.close()
 	else:
-		print "\nNo cutsites to print, program done.\n"
+		print( "\nNo cutsites to print, program done.\n")
 
 main() # run the main program
