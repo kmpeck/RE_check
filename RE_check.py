@@ -77,13 +77,32 @@ def MutagenizeCodon(seq, codon, cutsite, permutations):
 	if len(RE_data) > 0:
 		return RE_data
 
-def AminoAcidsLost():
+def AminoAcidsLost(RE_data):
 	"""
 	Checks to see whether the generated cutsite(s) will cause amino acids to not be 
-	represented in the codon library generated from deep mutational scanning
+	represented in the codon library generated from deep mutational scanning.
+	
+	Trp and Met are the only amino acids encoded by only one codon. Those are checked here.
+	If a residue changing results in a restriction site in more than one way (uncommon), a
+	flag is raised. Will make this more robust later.
 	
 	Returns the amino acids that will be lost
 	"""
+	lost = []
+	residues = []
+	for i in range(0,len(RE_data)):
+		residues.append(RE_data[i][0])
+		if RE_data[i][1] == "TGG":
+			print("Trp lost at residue %d\n" % RE_data[i][0])
+			lost.append((RE_data[i][0],RE_data[i][1],"Trp"))
+		if RE_data[i][1] == "ATG":
+			print("Met lost at residue %d\n" % RE_data[i][0])
+			lost.append((RE_data[i][0],RE_data[i][1],"Met"))
+	
+	if set([i for i in residues if residues.count(i)>1]) != set():
+		print("Residue %d is present more than once, please check output file manually to see if amino acids may be lost" % set([i for i in residues if residues.count(i)>1]))
+	
+	return lost
 	
 
 def main():
