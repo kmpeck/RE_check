@@ -144,24 +144,30 @@ def main():
 			introduced_REsites.append(RE_data)
 		#print RE_data
 
-	print( "\nThere were %d introduced cutsites for the sequence %s" % (len(introduced_REsites), cutsite))
+	print( "\nThere were %d introduced cutsites for the sequence %s\n" % (len(introduced_REsites), cutsite))
     
 	if len(introduced_REsites) > 0:
-		print( "\nNow writing these introduced cutsites to %s" % outfile)
+		#Check to see if any amino acids are lost
+		lost = AminoAcidsLost(introduced_REsites)
+		
+		print( "Now writing these introduced cutsites to %s\n" % outfile)
 		f = open(outfile, 'w+')
 		f.write("Cutsite: %s\r\n" % cutsite)
 		f.write("Introduced sites: %d\r\n" % len(introduced_REsites))
+		f.write("Amino Acids Lost: %d\r\n" % len(lost))
 		f.write("Input sequence file: %s\r\n" % sequencefile)
 		f.write("\r\nResidue\tCodon\tSequence\r\n")
+		
 		for i in range(0,len(introduced_REsites)):
 			#print(introduced_REsites[i][0])
 			f.write("%d\t%s\t%s\r\n" % (introduced_REsites[i][0]))
-		#Check to see if any amino acids are lost
-		lost = AminoAcidsLost(introduced_REsites)
+
 		if len(lost) > 0:
 			f.write("\r\nAmino Acids lost:\r\n")
+			f.write("\r\nResidue\tCodon\tAmino Acid\r\n")
 			for i in range(0, len(lost)):
-				f.write("%s\t%d\t%d\r\n" % (lost[i][0]))
+				#print(lost[i])
+				f.write("%d\t%s\t%s\r\n" % (lost[i]))
 		f.close()
 	else:
 		print( "\nNo cutsites to print, program done.\n")
