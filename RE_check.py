@@ -95,12 +95,14 @@ def AminoAcidsLost(RE_data):
 		if RE_data[i][1] == "TGG":
 			print("Trp lost at residue %d\n" % RE_data[i][0])
 			lost.append((RE_data[i][0],RE_data[i][1],"Trp"))
-		if RE_data[i][1] == "ATG":
+		elif RE_data[i][1] == "ATG":
 			print("Met lost at residue %d\n" % RE_data[i][0])
 			lost.append((RE_data[i][0],RE_data[i][1],"Met"))
+		else:
+			print("No amino acids are lost due to the introduced cutsites. Yay!\n")
 	
 	if set([i for i in residues if residues.count(i)>1]) != set():
-		print("Residue %d is present more than once, please check output file manually to see if amino acids may be lost" % set([i for i in residues if residues.count(i)>1]))
+		print("Residue %d is present more than once, please check output file manually to see if amino acids may be lost\n" % set([i for i in residues if residues.count(i)>1]))
 	
 	return lost
 	
@@ -151,6 +153,12 @@ def main():
 		for i in range(0,len(introduced_REsites)):
 			#print(introduced_REsites[i][0])
 			f.write("%d\t%s\t%s\r\n" % (introduced_REsites[i][0]))
+		#Check to see if any amino acids are lost
+		lost = AminoAcidsLost(introduced_REsites)
+		if len(lost) > 0:
+			f.write("\r\nAmino Acids lost:\r\n")
+			for i in range(0, len(lost)):
+				f.write("%s\t%d\t%d\r\n" % (lost[i][0]))
 		f.close()
 	else:
 		print( "\nNo cutsites to print, program done.\n")
