@@ -72,11 +72,19 @@ def MutagenizeCodon(seq, codon, cutsite, permutations):
 	RE_data = []
 	for i in range(0,len(perm_seq_all)):
 		if cutsite in perm_seq_all[i]:
-			RE_data.append((codon, perm_seq_all[i]))
+			RE_data.append((codon, permutations[i], perm_seq_all[i]))
 	
 	if len(RE_data) > 0:
 		return RE_data
 
+def AminoAcidsLost():
+	"""
+	Checks to see whether the generated cutsite(s) will cause amino acids to not be 
+	represented in the codon library generated from deep mutational scanning
+	
+	Returns the amino acids that will be lost
+	"""
+	
 
 def main():
 	parser = Parser()
@@ -120,10 +128,10 @@ def main():
 		f.write("Cutsite: %s\r\n" % cutsite)
 		f.write("Introduced sites: %d\r\n" % len(introduced_REsites))
 		f.write("Input sequence file: %s\r\n" % sequencefile)
-		f.write("\r\nCodon\tSequence\r\n")
+		f.write("\r\nResidue\tCodon\tSequence\r\n")
 		for i in range(0,len(introduced_REsites)):
 			#print(introduced_REsites[i][0])
-			f.write("%d\t%s\r\n" % (introduced_REsites[i][0]))
+			f.write("%d\t%s\t%s\r\n" % (introduced_REsites[i][0]))
 		f.close()
 	else:
 		print( "\nNo cutsites to print, program done.\n")
